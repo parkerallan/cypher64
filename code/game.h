@@ -8,6 +8,7 @@
 #include <t3d/t3dskeleton.h>
 #include <math.h>
 #include "player.h"
+#include "debug_menu.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -17,6 +18,7 @@ typedef struct {
     T3DModel *tunnel_model;
     T3DViewport *viewport;
     Player player;
+    DebugMenu debug_menu;
     
     // Display list for tunnel
     rspq_block_t *tunnelDpl;

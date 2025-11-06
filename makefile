@@ -6,7 +6,7 @@ DEBUG = 1
 BUILD_DIR = build
 SRC_DIR = code
 
-SRC = $(SRC_DIR)/main.c $(SRC_DIR)/startup.c $(SRC_DIR)/game.c $(SRC_DIR)/player.c $(SRC_DIR)/controls.c
+SRC = $(SRC_DIR)/main.c $(SRC_DIR)/startup.c $(SRC_DIR)/game.c $(SRC_DIR)/player.c $(SRC_DIR)/controls.c $(SRC_DIR)/debug_menu.c $(SRC_DIR)/animation.c
 #SRC += $(SRC_DIR)/example.c
 
 # Toolchain paths

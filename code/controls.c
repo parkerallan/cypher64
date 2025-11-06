@@ -9,38 +9,41 @@ void controls_init(void) {
 PlayerInput controls_get_player_input(joypad_buttons_t buttons, joypad_inputs_t inputs) {
     PlayerInput input = {0}; // Initialize all values to 0/false
     
-    // D-pad movement (digital)
-    if (buttons.d_up) {
-        input.move_forward = 1.0f;
-    } else if (buttons.d_down) {
-        input.move_forward = -1.0f;
-    }
-    
-    // D-pad turning
-    if (buttons.d_left) {
-        input.turn_rate = -1.0f;
-    } else if (buttons.d_right) {
-        input.turn_rate = 1.0f;
-    }
-    
-    // Analog stick movement (if you want to add analog support later)
-    // Normalize analog stick values (-128 to 127) to (-1.0 to 1.0)
-    if (inputs.stick_x != 0) {
-        input.move_right = inputs.stick_x / 127.0f;
-        // Clamp to -1.0 to 1.0 range
-        if (input.move_right > 1.0f) input.move_right = 1.0f;
-        if (input.move_right < -1.0f) input.move_right = -1.0f;
-    }
-    
+    // Primary movement: Analog stick
+    // Forward/backward movement (stick Y-axis)
     if (inputs.stick_y != 0) {
-        // Note: stick_y is inverted (up is negative)
-        float stick_forward = -inputs.stick_y / 127.0f;
+        // stick_y: up is negative, down is positive
+        // We want: up = forward (+1.0), down = backward (-1.0)
+        float stick_forward = inputs.stick_y / 127.0f;
         if (stick_forward > 1.0f) stick_forward = 1.0f;
         if (stick_forward < -1.0f) stick_forward = -1.0f;
-        
-        // Use analog stick if it's stronger than D-pad input
-        if (fabs(stick_forward) > fabs(input.move_forward)) {
-            input.move_forward = stick_forward;
+        input.move_forward = stick_forward;
+    }
+    
+    // Turning (stick X-axis)
+    if (inputs.stick_x != 0) {
+        float stick_turn = inputs.stick_x / 127.0f;
+        // Clamp to -1.0 to 1.0 range
+        if (stick_turn > 1.0f) stick_turn = 1.0f;
+        if (stick_turn < -1.0f) stick_turn = -1.0f;
+        input.turn_rate = stick_turn;
+    }
+    
+    // Backup movement: D-pad (for when analog stick isn't available)
+    // Only use D-pad if analog stick isn't being used
+    if (fabs(input.move_forward) < 0.1f) {
+        if (buttons.d_up) {
+            input.move_forward = 1.0f;
+        } else if (buttons.d_down) {
+            input.move_forward = -1.0f;
+        }
+    }
+    
+    if (fabs(input.turn_rate) < 0.1f) {
+        if (buttons.d_left) {
+            input.turn_rate = -1.0f;
+        } else if (buttons.d_right) {
+            input.turn_rate = 1.0f;
         }
     }
     

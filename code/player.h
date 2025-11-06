@@ -6,9 +6,13 @@
 #include <t3d/t3dmath.h>
 #include <t3d/t3dmodel.h>
 #include <t3d/t3dskeleton.h>
+#include <t3d/t3danim.h>
+#include "animation.h"
 
 #define PLAYER_SPEED 6.5f
 #define TURN_SPEED 0.08f
+#define JUMP_SPEED 15.0f
+#define GRAVITY 0.8f
 
 typedef struct {
     T3DVec3 position;
@@ -19,11 +23,20 @@ typedef struct {
     T3DModel* model;
     T3DSkeleton skeleton;  // Add skeleton for skinned rendering
     sprite_t* texture;
+    
+    // Jump physics
+    float velocity_y;
+    float ground_y;
+    bool is_grounded;
+    bool jump_requested;
+    
+    // Animation system
+    AnimationSystem anim_system;
 } Player;
 
 // Player management functions
 void player_init(Player* player);
-void player_update(Player* player, joypad_buttons_t buttons, joypad_inputs_t inputs);
+void player_update(Player* player, joypad_buttons_t buttons, joypad_inputs_t inputs, bool debug_menu_active);
 void player_render(Player* player);
 void player_cleanup(Player* player);
 
